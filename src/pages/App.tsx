@@ -13,7 +13,7 @@ const App: React.FC = () => {
       <Header />
       <Options />
       <If show={state.show}>
-        <div className="fixed w-48 z-10 bottom-10 left-1/2 -ml-24">
+        <div className="fixed w-64 z-10 bottom-10 left-1/2 -ml-32">
           <Alert message={state.message} type={state.type} showIcon />
         </div>
       </If>

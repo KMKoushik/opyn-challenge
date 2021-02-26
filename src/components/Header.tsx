@@ -3,13 +3,23 @@ import { Button } from 'antd';
 import copy from 'copy-to-clipboard';
 import * as metamask from '../service/metamask';
 import { getRandomInt, truncate } from '../service/util';
+import { useAppContext } from '../context';
 
 const Header: React.FC = () => {
   const [metamaskAcct, setMetamaskAcct] = useState('');
+  const { setMetaMask } = useAppContext();
 
   useEffect(() => {
     metamask.getAccount().then(setMetamaskAcct);
   }, []);
+
+  useEffect(() => {
+    if (metamaskAcct && metamaskAcct !== '') {
+      setMetaMask?.(true);
+    } else {
+      setMetaMask?.(false);
+    }
+  }, [metamaskAcct]);
 
   return (
     <div className="flex p-4 justify-between">
@@ -37,12 +47,17 @@ type MetaMaskBtnProps = {
 
 const MetaMaskBtn: React.FC<MetaMaskBtnProps> = ({ account, setMetaMask }) => {
   const [loading, setLoading] = useState(false);
+  const { showToast } = useAppContext();
 
   const connectMetaMask = async () => {
     setLoading(true);
-    const acct = await metamask.connectMetaMask();
+    try {
+      const acct = await metamask.connectMetaMask();
+      setMetaMask(acct);
+    } catch (e) {
+      showToast?.(e.message, 'error');
+    }
     setLoading(false);
-    setMetaMask(acct);
   };
 
   useEffect(() => {

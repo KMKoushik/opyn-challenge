@@ -93,7 +93,7 @@ const Checkout: React.FC<CheckoutProps> = ({ option, optionType }) => {
   const [avg, setAvg] = useState(option?.ask || 0);
   const [max, setMax] = useState(option?.size?.split('/')[1]);
   const [orders, setOrders] = useState<Order[]>([]);
-  const { showToast } = useAppContext();
+  const { showToast, state } = useAppContext();
 
   const onCoinChange = (val: number) => {
     setCoinAmt(val);
@@ -241,7 +241,9 @@ const Checkout: React.FC<CheckoutProps> = ({ option, optionType }) => {
           </div>
           <If show={option}>
             <div className="mt-4 ml-4 mb-4">
-              <Button type="primary" onClick={buyOrder}>{`Confirm ${type} order`}</Button>
+              <If show={state.metamask}>
+                <Button type="primary" onClick={buyOrder}>{`Confirm ${type} order`}</Button>
+              </If>
             </div>
           </If>
         </Form>
